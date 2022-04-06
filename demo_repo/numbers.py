@@ -16,10 +16,9 @@ class Integer(Number):
     def __init__(self, value):
         super().__init__(value=int(value))
 
+    def do_some_thing(self):
+        number = self.add(Number(2))
+        for i in range(number.value):
+            number = number.add(Number(i))
 
-def do_some_thing(number):
-    number = number.add(Number(2))
-    for i in range(number.value):
-        number = number.add(Number(i))
-
-    return number
+        return number
