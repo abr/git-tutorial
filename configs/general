@@ -1,0 +1,37 @@
+
+[pull]
+# Causes a pull to to rebase instead of merge, so no more merge commits!
+rebase = true
+
+########## Aliases ##########
+[alias]
+    co = checkout
+    ds = diff --staged
+    s = status
+    # Show a simplified log, one line per commit with hash, tags, author, and date
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    # The --force-with-lease flag is safer than -f but way too long to type out
+    fpush = push --force-with-lease
+
+########## Colors ##########
+[color]
+    branch = auto
+    diff = auto
+    interactive = auto
+    pager = true
+    status = auto
+    ui = auto
+[color "branch"]
+    current = green bold
+    local = green
+    remote = red bold
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+[color "status"]
+    added = green bold
+    changed = yellow bold
+    untracked = red bold

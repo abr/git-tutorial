@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+"""
+Copied from here: https://stackoverflow.com/a/10099633/1965323
+"""
+
+from collections import OrderedDict
+import os
+import sys
+
+
+def get_output(cmd):
+    return os.popen(cmd).read()
+
+
+if len(sys.argv) != 2:
+    print("usage: %s size_in_bytes" % sys.argv[0])
+else:
+    max_size = int(sys.argv[1])
+
+    #revisions = get_output("git rev-list HEAD").split()
+
+    branch_strings = get_output("git branch -a").split("\n")
+    branch_strings = [s.strip() for s in branch_strings]
+    branch_parts = [s.split() for s in branch_strings]
+    branch_names = [s[-1] if s[0].startswith("*") else s[0] for s in branch_parts if s and s[0]]
+    #revisions = branch_names
+
+    bigfiles = {}
+    for branch in branch_names:
+        commits = get_output("git rev-list %s" % branch).split()
+
+        for commit in commits:
+            files = get_output("git ls-tree -zrl %s" % commit).split('\0')
+            for file in files:
+                if file == "":
+                    continue
+                splitdata = file.split()
+                object_hash = splitdata[2]
+                if splitdata[3] == "-":
+                    continue
+                size = int(splitdata[3])
+                path = splitdata[4]
+                if (size > max_size):
+                    key = "%10d %s %s" % (size, object_hash, path)
+                    if key not in bigfiles:
+                        bigfiles[key] = OrderedDict()
+                    bigfiles[key][branch] = commit
+
+    keys = sorted(bigfiles, reverse=True)
+    for key in keys:
+        branches = bigfiles[key]
+        print("- %s" % (key,))
+        # print("        %s" % (list(branches.items()),))
+        for branch, commit in branches.items():
+            print("        %s %s" % (branch, commit))
