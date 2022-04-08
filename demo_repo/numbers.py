@@ -22,6 +22,9 @@ class Float(Number):
     def invert(self):
         self.value = 1 / self.value
 
+    def _check_positive(self):
+        assert self.value > 0
+
 
 class Integer(Number):
     def __init__(self, value):
@@ -33,3 +36,11 @@ class Integer(Number):
             number = number.add(Number(i))
 
         return number
+
+
+def test_float():
+    x = 3.14
+    f = Float(x)
+    f._check_positive()
+    assert f.integer().value == int(x)
+    assert f.fractional().value == (x - int(x))
