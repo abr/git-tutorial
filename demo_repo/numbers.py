@@ -12,6 +12,17 @@ class Number:
         return f"N(value={self.value})"
 
 
+class Float(Number):
+    def integer(self):
+        return Integer(self.value)
+
+    def fractional(self):
+        return Float(self.value - int(self.value))
+
+    def invert(self):
+        self.value = 1 / self.value
+
+
 class Integer(Number):
     def __init__(self, value):
         super().__init__(value=int(value))
